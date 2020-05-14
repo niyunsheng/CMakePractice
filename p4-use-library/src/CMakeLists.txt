@@ -3,11 +3,14 @@
 cmake_policy(SET CMP0015 NEW)
 
 #添加头文件路径
-INCLUDE_DIRECTORIES(../../p4-library/lib)
+INCLUDE_DIRECTORIES(../../p3-library/lib)
 #添加动态库路径
-LINK_DIRECTORIES(../../p4-library/build/lib)
+LINK_DIRECTORIES(../../p3-library/build/lib)
 
 ADD_EXECUTABLE(main main.c)
 
 #链接动态库
-TARGET_LINK_LIBRARIES(main hello)
+#TARGET_LINK_LIBRARIES(main hello)
+
+#链接静态库
+TARGET_LINK_LIBRARIES(main libhello.a)

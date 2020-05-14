@@ -1,7 +1,7 @@
 cmake_policy(SET CMP0015 NEW)
 
-FIND_PATH(HELLO_INCLUDE_DIR hello.h ../../p4-library/lib)
-FIND_LIBRARY(HELLO_LIBRARY NAMES hello PATHS ../../p4-library/build/lib)
+FIND_PATH(HELLO_INCLUDE_DIR hello.h ../../p3-library/lib)
+FIND_LIBRARY(HELLO_LIBRARY NAMES hello PATHS ../../p3-library/build/lib)
 
 IF (HELLO_INCLUDE_DIR AND HELLO_LIBRARY)
    SET(HELLO_FOUND TRUE)

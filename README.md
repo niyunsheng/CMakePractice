@@ -1,12 +1,12 @@
 # CMake 极简入门
 
->本文根据《[cmake实践.pdf](./cmake实践.pdf)》整理并简化一些内容 
+由项目[fishCoder/CMakePractice](https://github.com/fishCoder/CMakePractice)稍加修改，作为自己学习cmake的笔记。
 
-#### [项目地址](https://github.com/fishCoder/CMakePractice)
+[toc]
 
 ******
 
->p1 [最简单的hello world](./p1-hello)
+# p1 [最简单的hello world](./p1-hello)
 
 
 文件结构(其他均为cmake生成的文件)
@@ -17,7 +17,7 @@ main.c
 
 ***main.c***
 
-```
+```c
 #include <stdio.h>
 int main(){
     printf("Hello World use Cmake :)\n");
@@ -27,7 +27,7 @@ int main(){
 
 ***CMakeLists.txt***
 
-```
+```cmake
 #设置项目名称 HELLO
 PROJECT (HELLO)
 
@@ -60,78 +60,8 @@ make
 ```
 
 
->p2 [多个文件的hello world](./p2-command)
 
-CMakeLists.txt
-
-main.c
-	
-fun.h
-	
-fun.c
-
-******
-
-***fun.h***
-
-```
-#include <stdio.h>
-void fun();
-```
-
-***fun.c***
-
-```
-void fun(){
-    printf("call fun \n");
-}
-
-```
-
-***main.c***
-
-```
-#include <stdio.h>
-#include "fun.h"
-
-int main(){
-    fun();
-    return 0;
-}
-
-```
-
-
-***CMakeLists.txt***
-
-```
-PROJECT(P2_COMMAND)
-
-#变量赋值
-SET(PARAM 'this is param')
-
-#赋多个值 给变量SRC
-SET(SRC main.c fun.h fun.c)
-
-MESSAGE(STATUS 'PARAM :' ${PARAM})
-MESSAGE(STATUS 'SRC:' ${SRC})
-
-#生成执行文件fun
-ADD_EXECUTABLE(fun ${SRC})
-```
-***编译运行***
-
-```
-cmake
-
-make
-
-./hello
-```
-
-
-
->p3 [结构化的hello world](./p3-helloworld)
+# p2 [结构化的hello world](./p2-helloworld)
 
 CMakeLists.txt
 
@@ -143,7 +73,7 @@ bin\
 
 ***CMakeLists.txt***
 
-```
+```cmake
 PROJECT(HELLO) 
 
 #添加子目录 并在该目录下自动寻找CMakeLists.txt 运行
@@ -164,9 +94,8 @@ MESSAGE(STATUS LIBRARY_OUTPUT_PATH ${LIBRARY_OUTPUT_PATH})
 
 ***src\CMakeLists.txt***
 
-```
+```cmake
 ADD_EXECUTABLE(hello main.c)
-
 ```
 
 ***编译运行***
@@ -183,7 +112,7 @@ make
 ```
 
 
->p4 [编译动态库 并且链接库](./p4-library)
+# p3 [编译动态库 并且链接库](./p3-library)
 
 CMakeLists.txt
 
@@ -195,7 +124,7 @@ lib/CMakeLists.txt	hello.c		hello.h
 
 ***lib/hello.h***
 
-```
+```c
 #ifndef HELLO_H
 #define HELLO_H
 
@@ -208,7 +137,7 @@ void sayHello();
 
 ***lib/hello.c***
 
-```
+```c
 #include "hello.h"
 
 void sayHello(){
@@ -221,7 +150,7 @@ void sayHello(){
 
 ***CMakeLists.txt***
 
-```
+```cmake
 PROJECT(HELLOLIB)
 
 ADD_SUBDIRECTORY(lib)
@@ -229,7 +158,7 @@ ADD_SUBDIRECTORY(lib)
 
 ***lib/CMakeLists.txt***
 
-```
+```cmake
 SET(LIBHELLO_SRC hello.c)
 
 
@@ -261,24 +190,26 @@ make
 ```
 
 
->p5 [链接外部库](./p5-use-library)
+# p4 [链接外部库](./p4-use-library)
 
-CMakeLists.txt		
-build/		
+CMakeLists.txt
+
+build/
+
 src/CMakeLists.txt	main.c
 
 ******
 
 ***CMakeLists.txt***
 
-```
+```cmake
 PROJECT(NEWHELLO)
 ADD_SUBDIRECTORY(src)
 ```
 
 ***src/main.c***
 
-```
+```c
 #include <stdio.h>
 #include "hello.h"
 
@@ -291,15 +222,15 @@ int main(){
 
 ***src/CMakeLists.txt***
 
-```
+```cmake
 #允许动态库路径使用相对路径
 #https://cmake.org/cmake/help/v3.0/policy/CMP0015.html
 cmake_policy(SET CMP0015 NEW)
 
 #添加头文件路径
-INCLUDE_DIRECTORIES(../../p4-library/lib)
+INCLUDE_DIRECTORIES(../../p3-library/lib)
 #添加动态库路径
-LINK_DIRECTORIES(../../p4-library/build/lib)
+LINK_DIRECTORIES(../../p3-library/build/lib)
 
 ADD_EXECUTABLE(main main.c)
 
@@ -308,7 +239,7 @@ TARGET_LINK_LIBRARIES(main hello)
 ```
 
 
->p6 [cmake一些基本常量以及语法](./p6-cmake-constant)
+# p5 [cmake一些基本常量以及语法](./p5-cmake-constant)
 
 CMakeLists.txt	
 
@@ -322,7 +253,7 @@ build\
 
 ***CMakeLists.txt***
 
-```
+```cmake
 PROJECT(CONSTANT)
 MESSAGE(STATUS "CMAKE_BINARY_DIR=" ${CMAKE_BINARY_DIR})
 MESSAGE(STATUS "PROJECT_BINARY_DIR=" ${PROJECT_BINARY_DIR})
@@ -341,7 +272,7 @@ ADD_SUBDIRECTORY(anthor)
 
 ***src/CMakeLists.txt***
 
-```
+```cmake
 MESSAGE(STATUS "THIS IS SRC")
 
 MESSAGE(STATUS "CMAKE_BINARY_DIR=" ${CMAKE_BINARY_DIR})
@@ -362,7 +293,7 @@ MESSAGE(STATUS "CMAKE_CURRENT_LIST_LINE=" ${CMAKE_CURRENT_LIST_LINE})
 
 ***anthor/CMakeLists.txt***
 
-```
+```cmake
 MESSAGE(STATUS "THIS IS ANTHOR") 
 
 #检测当前编译平台
@@ -385,11 +316,7 @@ ENDFOREACH(VAR)
 
 ```
 
-
-
-
-
->p7 [使用FIND_PACKAGE查找模块](./p7-find-module)
+# p6 [使用FIND_PACKAGE查找模块](./p6-find-module)
 
 CMakeLists.txt	
 
@@ -401,7 +328,7 @@ src/CMakeLists.txt	main.c
 
 ***CMakeLists.txt***
 
-```
+```cmake
 PROJECT(CURLTEST)
 ADD_SUBDIRECTORY(src)
 ```
@@ -410,7 +337,7 @@ ADD_SUBDIRECTORY(src)
 
 调用外部curl库 获取网页 并保存下来
 
-```
+```c
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -439,7 +366,7 @@ int main(){
 
 ***src/CMakeLists.txt***
 
-```
+```cmake
 ADD_EXECUTABLE(curltest main.c)
 
 #查找curl库
@@ -457,7 +384,7 @@ ENDIF(CURL_FOUND)
 
 ```
 
->p8 [自己编写一个查找模块](./p8-find-my-module)
+# p7 [自己编写一个查找模块](./p7-find-my-module)
 
 CMakeLists.txt	
 
@@ -471,7 +398,7 @@ src/
 
 ***CMakeLists.txt***
 
-```
+```cmake
 cmake_minimum_required(VERSION 3.0)
 PROJECT(FINDHELLO)
 #添加外部库搜索路径
@@ -481,7 +408,7 @@ ADD_SUBDIRECTORY(src)
 
 ***src/CMakeLists.txt***
 
-```
+```cmake
 FIND_PACKAGE(HELLO)
 IF(HELLO_FOUND)
     ADD_EXECUTABLE(hello main.c)
@@ -495,12 +422,12 @@ ENDIF(HELLO_FOUND)
 
 ***cmake/FindHELLO.cmake***
 
-```
+```cmake
 cmake_policy(SET CMP0015 NEW)
 #添加头文件搜索路径
-FIND_PATH(HELLO_INCLUDE_DIR hello.h ../../p4-library/lib)
+FIND_PATH(HELLO_INCLUDE_DIR hello.h ../../p3-library/lib)
 #添加库搜索路径
-FIND_LIBRARY(HELLO_LIBRARY NAMES hello PATHS ../../p4-library/build/lib)
+FIND_LIBRARY(HELLO_LIBRARY NAMES hello PATHS ../../p3-library/build/lib)
 
 IF (HELLO_INCLUDE_DIR AND HELLO_LIBRARY)
    SET(HELLO_FOUND TRUE)
@@ -514,6 +441,5 @@ ELSE (HELLO_FOUND)
       MESSAGE(FATAL_ERROR "Could not find hello library")
    ENDIF (HELLO_FIND_REQUIRED)
 ENDIF (HELLO_FOUND)
-
 ```
 
